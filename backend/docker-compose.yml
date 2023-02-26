@@ -1,0 +1,33 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - todo-data:/var/lib/mysql
+
+  app:
+    container_name: todo-list
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: mysql
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+    depends_on:
+      - mysql
+    ports:
+      - "8000:8000"
+
+volumes:
+  todo-data:

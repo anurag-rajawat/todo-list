@@ -40,3 +40,10 @@ $ cd frontend
 - MySQL for storing todos
 - Docker for containerisation
 - Frontend by [Max Sandelin](https://instagram.com/themaxsandelin)
+
+
+### Self note (TODO)
+1. Use ansible for configuration (If needed)
+2. Terraform for infrastructure provisioning
+3. Deploy on AWS
+4. Automate complete workflow

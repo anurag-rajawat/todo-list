@@ -1,0 +1,45 @@
+---
+- hosts: dev
+  name: Start app on an instance
+  gather_facts: false
+  vars:
+    project_path: todo-list
+    env_file_src: "~/Playground/Go/{{ project_path }}/backend/.env"
+  tasks:
+    - name: Clone repo
+      ansible.builtin.git:
+        repo: https://github.com/anurag-rajawat/todo-list.git
+        dest: "{{ project_path }}"
+        version: main
+
+    - name: Copy .env file
+      ansible.builtin.copy:
+        src: "{{ env_file_src }}"
+        dest: "{{ project_path }}/backend/.env"
+        mode: "0644"
+
+    - name: Tear down existing services
+      community.docker.docker_compose:
+        project_src: "{{ project_path }}/backend"
+        state: absent
+
+    - name: Build frontend image
+      community.docker.docker_image:
+        name: frontend:1.0
+        build:
+          path: "{{ project_path }}/frontend"
+        source: build
+
+    - name: Start frontend container
+      community.docker.docker_container:
+        name: frontend
+        image: frontend:1.0
+        state: started
+        restart: true
+        ports:
+          - "80:80"
+
+    - name: Create and start backend services
+      community.docker.docker_compose:
+        project_src: "{{ project_path }}/backend"
+        build: false

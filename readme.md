@@ -43,7 +43,7 @@ $ cd frontend
 
 
 ### Self note (TODO)
-1. Use ansible for configuration (If needed)
+1. Use ansible for configuration ✅
 2. Terraform for infrastructure provisioning
 3. Deploy on AWS
 4. Automate complete workflow

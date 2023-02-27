@@ -11,6 +11,14 @@
           - curl
           - gnupg
           - lsb-release
+          - python3-pip
+
+    - name: Install Python docker packages
+      ansible.builtin.pip:
+        name:
+          - docker
+          - docker-compose
+        state: present
 
     - name: Add Docker GPG key
       ansible.builtin.apt_key:
@@ -19,7 +27,7 @@
 
     - name: Add Docker repository
       ansible.builtin.apt_repository:
-        repo: deb https://download.docker.com/linux/ubuntu jammy stable
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
         state: present
         update_cache: true
 
@@ -32,14 +40,27 @@
           - docker-buildx-plugin
           - docker-compose-plugin
         state: present
+      notify: Start docker
 
-    - name: Make sure docker is started and enabled
-      ansible.builtin.service:
+    - name: Create docker group
+      ansible.builtin.group:
         name: docker
-        state: started
-        enabled: true
+        state: present
+
+    - name: Add current user to docker group
+      ansible.builtin.user:
+        name: ubuntu
+        group: docker
+        append: true
 
     - name: Pull default hello-world docker image
       community.docker.docker_image:
         name: hello-world
         source: pull
+
+  handlers:
+    - name: Start docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true

@@ -27,7 +27,7 @@
 
     - name: Add Docker repository
       ansible.builtin.apt_repository:
-        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu jammy stable
+        repo: deb https://download.docker.com/linux/ubuntu jammy stable
         state: present
         update_cache: true
 
@@ -49,7 +49,7 @@
 
     - name: Add current user to docker group
       ansible.builtin.user:
-        name: ubuntu
+        name: "{{ ansible_user }}"
         group: docker
         append: true
 

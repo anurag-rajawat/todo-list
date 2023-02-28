@@ -23,7 +23,7 @@
         project_src: "{{ project_path }}/backend"
         state: absent
 
-    - name: Build frontend image
+    - name: Build frontend container image
       community.docker.docker_image:
         name: frontend:1.0
         build:
@@ -38,6 +38,13 @@
         restart: true
         ports:
           - "80:80"
+
+    - name: Add frontend container to docker compose network
+      community.docker.docker_network:
+        name: backend_default
+        connected:
+          - frontend
+        appends: true
 
     - name: Create and start backend services
       community.docker.docker_compose:

@@ -1,6 +1,6 @@
 ---
 - hosts: dev
-  name: Start app on an instance
+  name: Start app on instance
   gather_facts: false
   vars:
     project_path: todo-list
@@ -11,6 +11,7 @@
         repo: https://github.com/anurag-rajawat/todo-list.git
         dest: "{{ project_path }}"
         version: main
+        force: true
 
     - name: Copy .env file
       ansible.builtin.copy:
@@ -38,13 +39,6 @@
         restart: true
         ports:
           - "80:80"
-
-    - name: Add frontend container to docker compose network
-      community.docker.docker_network:
-        name: backend_default
-        connected:
-          - frontend
-        appends: true
 
     - name: Create and start backend services
       community.docker.docker_compose:

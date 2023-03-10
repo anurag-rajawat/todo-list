@@ -1,3 +1,6 @@
+## 📢 This project is not completed and I'm not planning to complete it. So, it will be read-only.
+
+
 # 🔖 Go todo app
 This is a todo application just for learning purpose.
 
